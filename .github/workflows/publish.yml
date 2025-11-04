@@ -10,7 +10,7 @@ on:
 
 env:
   DOTNET_VERSION: '8.0.x'
-  PROJECT_PATH: 'src/YourClassLibrary/YourClassLibrary.csproj'
+  PROJECT_PATH: './WinApp.ExtControl.csproj'
   CONFIGURATION: 'Release'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
 
