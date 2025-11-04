@@ -1,47 +1,61 @@
-name: Publish NuGet Package (Trusted Publishing)
+name: .NET Class Library CI/CD - Trusted Publishing
 
 on:
   push:
     tags:
-      - 'v*' # 当推送以 v 开头的 tag 时触发，如 v1.0.0
+      - 'v*'   # 当推送以 v 开头的 tag 时触发，如 v1.0.0
 
 permissions:
-  id-token: write   # ✅ 必须: 允许 OIDC 登录 NuGet.org
+  id-token: write    # ✅ 必须，允许 GitHub 发 OIDC 令牌
   contents: read
 
+env:
+  DOTNET_VERSION: '8.0.x'
+  PROJECT_PATH: './WinApp.ExtControl.csproj'
+  CONFIGURATION: 'Release'
+  NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
+
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+  build-and-publish:
+    runs-on: windows-latest  # ✅ 保留 Windows 构建环境
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: 📥 检出代码
+      uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x  # 或 8.0.x，根据你的项目版本调整
+    - name: 🏗️ 设置 .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore dependencies
-        run: dotnet restore
+    - name: 🔍 显示环境信息
+      run: |
+        echo "运行器操作系统: Windows"
+        dotnet --info
+        dotnet --list-sdks
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+    - name: 🧩 还原依赖
+      run: dotnet restore ${{ env.PROJECT_PATH }}
 
-      - name: Pack
-        run: dotnet pack --configuration Release --no-build --output ./artifacts
+    - name: 🔨 编译项目
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-restore
 
-      # 🌟 新增：使用 OIDC 登录 NuGet.org 获取临时 API Key
-      - name: Authenticate to NuGet.org (Trusted Publishing)
-        id: login
-        uses: NuGet/login@v1
-        with:
-          nuget-service: nuget.org
-          user: qingshanjianke
+    - name: 🧪 运行测试
+      run: dotnet test ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --logger "trx;LogFileName=test_results.trx"
 
-      # 🚀 发布 NuGet 包
-      - name: Publish package to NuGet.org
-        run: dotnet nuget push "artifacts/*.nupkg" \
-               --api-key ${{ steps.login.outputs.NUGET_API_KEY }} \
-               --source https://api.nuget.org/v3/index.json \
-               --skip-duplicate
+    - name: 📦 打包 NuGet 包
+      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --output ./artifacts
+
+    # 🌟 新增：使用 OIDC 登录 NuGet.org 获取临时 API Key
+    - name: 🔐 认证到 NuGet.org（Trusted Publishing）
+      id: login
+      uses: NuGet/login@v1
+      with:
+        user: qingshanjianke
+
+    # 🚀 发布包
+    - name: 🚀 发布到 NuGet.org
+      run: dotnet nuget push "artifacts/*.nupkg" ^
+             --api-key ${{ steps.login.outputs.NUGET_API_KEY }} ^
+             --source ${{ env.NUGET_SOURCE }} ^
+             --skip-duplicate
