@@ -53,7 +53,7 @@ jobs:
   pack:
     runs-on: windows-latest
     needs: build-and-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'release'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'release'
 
     steps:
     - name: 📥 检出代码
