@@ -1,31 +1,57 @@
 name: Publish Release Package
+
 on:
   push:
+    branches: [ "master" ]    # 推送到 main 分支时触发
     tags:
       - "v**"
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  DOTNET_VERSION: '8.0.x' # 可根据项目需要调整.NET版本
+  PROJECT_PATH: 'WinApp.ExtControl/WinApp.ExtControl.csproj' # 替换为你的项目路径
+  CONFIGURATION: 'Release'
 
 jobs:
-  Build-Release:
-    runs-on: windows
+  build-and-test:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Git
-        uses: http://gitea.local.yious.cn/actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
+    - name: 📥 检出代码
+      uses: actions/checkout@v4
 
-      - name: Build Application
-        run: ./Setup/buildCloud.ps1 -Version ${{ github.ref_name }}
-              
-      - name: Generate Release Doc
-        run: |
-          . ./Setup/git-utils.ps1
-          Set-GitReleaseDoc -Path release.doc -Tag ${{ gitea.ref }}
+    - name: 🏗️ 设置 .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Release
-        uses: https://gitea.com/actions/gitea-release-action@v1
-        with:
-          name: Release ${{ github.ref_name }}
-          body_path: release.doc
-          prerelease: false
-          files: ./bin/*.exe
+    - name: 🧩 还原依赖
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+
+    - name: 🔨 编译项目
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-restore
+
+    - name: 🧪 运行测试
+      run: dotnet test ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
+
+  pack-and-publish:
+    runs-on: ubuntu-latest
+    needs: build-and-test # 依赖于 build-and-test 任务
+    # 仅当推送到 main 分支且 build-and-test 任务成功时运行
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.build-and-test.result == 'success'
+
+    steps:
+    - name: 📥 检出代码
+      uses: actions/checkout@v4
+
+    - name: 🏗️ 设置 .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: 📦 打包 NuGet 包
+      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --output ./nupkg --include-symbols
+
+    - name: 🚀 发布到 NuGet.org
+      run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
