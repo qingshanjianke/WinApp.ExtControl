@@ -59,7 +59,11 @@ jobs:
 
     # 🚀 发布包
     - name: 🚀 发布到 NuGet.org
-      run: dotnet nuget push "artifacts/*.nupkg" ^
-             --api-key ${{ steps.login.outputs.NUGET_API_KEY }} ^
-             --source ${{ env.NUGET_SOURCE }} ^
-             --skip-duplicate
+      run: |
+        echo "查找 nupkg 文件..."
+        dir . -Recurse -Filter *.nupkg
+        $pkg = Get-ChildItem -Recurse -Filter *.nupkg | Select-Object -First 1
+        echo "找到包: $($pkg.FullName)"
+        dotnet nuget push "$($pkg.FullName)" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source ${{ env.NUGET_SOURCE }} --skip-duplicate
+      shell: pwsh
+      
