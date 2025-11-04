@@ -1,0 +1,57 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    po:Freeze="True">
+
+	<!--  颜色资源  -->
+
+	<SolidColorBrush x:Key="WE.ButtonFocusVisualColor" po:Freeze="True" Color="#60000000" />
+
+	<Color x:Key="WE.ShadowDepthColor" po:Freeze="True">#AA000000</Color>
+
+	<Color x:Key="WE.PlaceholderTextColor" po:Freeze="True">#C0C4CC</Color>
+	<SolidColorBrush x:Key="WE.PlaceholderTextBrush" po:Freeze="True" Color="{StaticResource WE.PlaceholderTextColor}" />
+
+	<!--  PrimaryColor  -->
+	<Color x:Key="WE.PrimaryColor" po:Freeze="True">#409EFF</Color>
+	<SolidColorBrush x:Key="WE.PrimaryBrush" po:Freeze="True" Color="{StaticResource WE.PrimaryColor}" />
+
+	<Color x:Key="WE.PrimaryMouseOverColor" po:Freeze="True">#EBF4FF</Color>
+	<SolidColorBrush x:Key="WE.PrimaryMouseOverBrush" po:Freeze="True" Color="{DynamicResource WE.PrimaryMouseOverColor}" />
+
+	<!--  SuccessColor  -->
+	<Color x:Key="WE.SuccessColor" po:Freeze="True">#13CE67</Color>
+	<SolidColorBrush x:Key="WE.SuccessBrush" po:Freeze="True" Color="{StaticResource WE.SuccessColor}" />
+	<Color x:Key="WE.SuccessMouseOverColor" po:Freeze="True">#EFFCE9</Color>
+	<SolidColorBrush x:Key="WE.SuccessMouseOverBrush" po:Freeze="True" Color="{StaticResource WE.SuccessMouseOverColor}" />
+
+	<!--  WarningColor  -->
+	<Color x:Key="WE.WarningColor" po:Freeze="True">#E6A23C</Color>
+	<SolidColorBrush x:Key="WE.WarningBrush" po:Freeze="True" Color="{StaticResource WE.WarningColor}" />
+
+	<Color x:Key="WE.WarningMouseOverColor" po:Freeze="True">#FAF2E5</Color>
+	<SolidColorBrush x:Key="WE.WarningMouseOverBrush" po:Freeze="True" Color="{StaticResource WE.WarningMouseOverColor}" />
+
+	<!--  DangerColor  -->
+	<Color x:Key="WE.DangerColor" po:Freeze="True">#F56C6C</Color>
+	<SolidColorBrush x:Key="WE.DangerBrush" po:Freeze="True" Color="{StaticResource WE.DangerColor}" />
+
+	<Color x:Key="WE.DangerMouseOverColor" po:Freeze="True">#FCE5E5</Color>
+	<SolidColorBrush x:Key="WE.DangerMouseOverBrush" po:Freeze="True" Color="{StaticResource WE.DangerMouseOverColor}" />
+
+	<Color x:Key="WE.BlackColor" po:Freeze="True">#000000</Color>
+	<SolidColorBrush x:Key="WE.BlackBrush" po:Freeze="True" Color="{StaticResource WE.BlackColor}" />
+
+	<!--  CircularMenu  -->
+	<Color x:Key="WE.CircleMenuColor" po:Freeze="True">#BAE766</Color>
+	<SolidColorBrush x:Key="WE.CircleMenuBrush" po:Freeze="True" Color="{StaticResource WE.CircleMenuColor}" />
+
+	<Color x:Key="WE.CircleMenuDualColor" po:Freeze="True">#B0D440</Color>
+	<SolidColorBrush x:Key="WE.CircleMenuDualBrush" po:Freeze="True" Color="{StaticResource WE.CircleMenuDualColor}" />
+
+	<RadialGradientBrush x:Key="WE.StarrySkyBrush" po:Freeze="True" Center="0.5,0.3" GradientOrigin="0.5,0" RadiusX="0.7">
+		<GradientStop Offset="0" Color="#FF04040E" />
+		<GradientStop Offset="1" Color="#FF24315D" />
+	</RadialGradientBrush>
+
+</ResourceDictionary>

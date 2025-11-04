@@ -1,0 +1,174 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:WinApp.ExtControl.Controls"
+                    xmlns:helpers="clr-namespace:WinApp.ExtControl.Helpers">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="../Styles/Styles.Buttons.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<Style x:Key="WE.MessageListBoxItem" BasedOn="{StaticResource WE.ControlBasicStyle}" TargetType="{x:Type controls:MessageListBoxItem}">
+		<Setter Property="Foreground" Value="{DynamicResource WE.RegularTextBrush}" />
+		<Setter Property="Background" Value="{DynamicResource WE.BackgroundBrush}" />
+		<Setter Property="helpers:ListBoxItemExtensions.AutoRemoveOnOpacityZero" Value="True" />
+		<Setter Property="Width" Value="300" />
+		<Setter Property="Height" Value="Auto" />
+		<Setter Property="Padding" Value="10" />
+		<Setter Property="Margin" Value="4 2" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type controls:MessageListBoxItem}">
+					<ControlTemplate.Resources>
+						<Storyboard x:Key="Storyboard_Close" DesiredFrameRate="30">
+							<DoubleAnimation Storyboard.TargetName="PART_SmallPanel"
+							                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+							                 From="1"
+							                 To="0"
+							                 Duration="0:0:0.2" />
+							<DoubleAnimation BeginTime="0:0:0.2"
+							                 Storyboard.TargetProperty="Opacity"
+							                 From="1"
+							                 To="0"
+							                 Duration="0:0:0" />
+						</Storyboard>
+						<Storyboard x:Key="Storyboard_Loaded" DesiredFrameRate="30">
+							<DoubleAnimation Storyboard.TargetName="PART_SmallPanel"
+							                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+							                 From="0"
+							                 To="1"
+							                 Duration="0:0:0.2" />
+							<DoubleAnimation Storyboard.TargetName="PART_SmallPanel"
+							                 Storyboard.TargetProperty="Opacity"
+							                 From=".1"
+							                 To="1"
+							                 Duration="0:0:0.2" />
+							<DoubleAnimation BeginTime="0:0:10"
+							                 Storyboard.TargetName="PART_SmallPanel"
+							                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+							                 From="1"
+							                 To="0"
+							                 Duration="0:0:0.2" />
+							<DoubleAnimation BeginTime="0:0:10"
+							                 Storyboard.TargetProperty="Opacity"
+							                 From="1"
+							                 To="0"
+							                 Duration="0:0:0.2" />
+							<DoubleAnimation Storyboard.TargetName="PART_Rectangle"
+							                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+							                 From="1"
+							                 To="0"
+							                 Duration="0:0:10" />
+						</Storyboard>
+					</ControlTemplate.Resources>
+					<controls:SmallPanel x:Name="PART_SmallPanel" CacheMode="BitmapCache" RenderTransformOrigin=".5,0">
+						<controls:SmallPanel.RenderTransform>
+							<ScaleTransform />
+						</controls:SmallPanel.RenderTransform>
+						<Border x:Name="PART_Border"
+						        Background="{TemplateBinding Background}"
+						        BorderBrush="{TemplateBinding BorderBrush}"
+						        BorderThickness="{TemplateBinding BorderThickness}"
+						        CornerRadius="{Binding Path=(helpers:ElementHelper.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+						        Effect="{StaticResource WE.PrimaryShadowDepth}"
+						        SnapsToDevicePixels="True"
+						        UseLayoutRounding="True" />
+						<Border Padding="{TemplateBinding Padding}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+								<DockPanel x:Name="PART_DockPanel" Grid.Column="0">
+									<Path x:Name="PART_Path"
+									      Width="15"
+									      Height="15"
+									      Data="{StaticResource WE.InformationGeometry}"
+									      Fill="{DynamicResource WE.PrimaryBrush}"
+									      Stretch="Fill" />
+									<TextBlock Grid.Column="1"
+									           Margin="5 0 0 0"
+									           VerticalAlignment="Center"
+									           FontSize="{TemplateBinding FontSize}"
+									           Foreground="{TemplateBinding Foreground}"
+									           Text="{TemplateBinding Content}"
+									           TextWrapping="Wrap" />
+								</DockPanel>
+								<Button x:Name="PART_CloseButton"
+								        Grid.Column="2"
+								        Width="25"
+								        Height="25"
+								        Margin="0 2 4 0"
+								        HorizontalAlignment="Right"
+								        helpers:ElementHelper.IsRound="True"
+								        Style="{StaticResource WE.NormalButton}"
+								        ToolTip="Close">
+									<controls:PathIcon Width="10"
+									                   Height="10"
+									                   Foreground="{DynamicResource WE.PrimaryTextBrush}"
+									                   Kind="WindowClose" />
+								</Button>
+							</Grid>
+						</Border>
+						<Rectangle x:Name="PART_Rectangle"
+						           Height="2"
+						           VerticalAlignment="Bottom"
+						           Fill="{Binding ElementName=PART_Path, Path=Fill}"
+						           RenderTransformOrigin="0,0">
+							<Rectangle.RenderTransform>
+								<ScaleTransform ScaleX="1" />
+							</Rectangle.RenderTransform>
+						</Rectangle>
+					</controls:SmallPanel>
+					<ControlTemplate.Triggers>
+						<Trigger Property="MessageType" Value="Warning">
+							<Setter TargetName="PART_Path" Property="Data" Value="{StaticResource WE.WarningGeometry}" />
+							<Setter TargetName="PART_Path" Property="Fill" Value="{StaticResource WE.WarningBrush}" />
+							<Setter Property="Foreground" Value="{StaticResource WE.WarningBrush}" />
+						</Trigger>
+						<Trigger Property="MessageType" Value="Error">
+							<Setter TargetName="PART_Path" Property="Data" Value="{StaticResource WE.ErrorGeometry}" />
+							<Setter TargetName="PART_Path" Property="Fill" Value="{StaticResource WE.DangerBrush}" />
+							<Setter Property="Foreground" Value="{StaticResource WE.DangerBrush}" />
+						</Trigger>
+						<Trigger Property="MessageType" Value="Information">
+							<Setter TargetName="PART_Path" Property="Data" Value="{StaticResource WE.InformationGeometry}" />
+							<Setter TargetName="PART_Path" Property="Fill" Value="{StaticResource WE.SuccessBrush}" />
+							<Setter Property="Foreground" Value="{StaticResource WE.SuccessBrush}" />
+						</Trigger>
+						<Trigger Property="MessageType" Value="Question">
+							<Setter TargetName="PART_Path" Property="Data" Value="{StaticResource WE.QuestionGeometry}" />
+							<Setter TargetName="PART_Path" Property="Fill" Value="{DynamicResource WE.PrimaryBrush}" />
+							<Setter Property="Foreground" Value="{DynamicResource WE.PrimaryBrush}" />
+						</Trigger>
+						<Trigger Property="IsCenter" Value="True">
+							<Setter TargetName="PART_DockPanel" Property="HorizontalAlignment" Value="Center" />
+						</Trigger>
+						<EventTrigger RoutedEvent="Button.Click" SourceName="PART_CloseButton">
+							<BeginStoryboard x:Name="BeginStoryboardClose" Storyboard="{StaticResource Storyboard_Close}" />
+						</EventTrigger>
+						<EventTrigger RoutedEvent="Loaded">
+							<BeginStoryboard x:Name="BeginStoryboardLoaded" Storyboard="{StaticResource Storyboard_Loaded}" />
+						</EventTrigger>
+						<EventTrigger RoutedEvent="Unloaded">
+							<StopStoryboard BeginStoryboardName="BeginStoryboardLoaded" />
+							<StopStoryboard BeginStoryboardName="BeginStoryboardClose" />
+						</EventTrigger>
+						<Trigger Property="Opacity" Value="0">
+							<Setter Property="Visibility" Value="Collapsed" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="WE.MessageListBox" TargetType="{x:Type controls:MessageListBox}">
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+	</Style>
+
+	<Style BasedOn="{StaticResource WE.MessageListBoxItem}" TargetType="{x:Type controls:MessageListBoxItem}" />
+	<Style BasedOn="{StaticResource WE.MessageListBox}" TargetType="{x:Type controls:MessageListBox}" />
+
+</ResourceDictionary>

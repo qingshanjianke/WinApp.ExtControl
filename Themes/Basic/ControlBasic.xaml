@@ -1,0 +1,74 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="Font.xaml" />
+		<ResourceDictionary Source="Colors.xaml" />
+		<ResourceDictionary Source="Geometrys.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<sys:Double x:Key="WE.EnabledOpacity">0.7</sys:Double>
+	<sys:Double x:Key="WE.CornerRadius">4</sys:Double>
+	<sys:Double x:Key="WE.Height">32</sys:Double>
+	<sys:Double x:Key="WE.ThumbWidth">16</sys:Double>
+	<sys:Double x:Key="WE.ThumbCornerRadius">8</sys:Double>
+	<sys:Double x:Key="WE.RepeatButtonSize">6</sys:Double>
+	<Thickness x:Key="WE.Padding">6</Thickness>
+
+	<Style x:Key="WE.ControlBasicStyle" TargetType="Control">
+		<Setter Property="FontSize" Value="{StaticResource WE.PrimaryFontSize}" />
+		<Setter Property="FontFamily" Value="{StaticResource WE.FontFamily}" />
+		<Setter Property="FontStyle" Value="{StaticResource WE.FontStyle}" />
+		<Setter Property="FontWeight" Value="{StaticResource WE.FontWeight}" />
+		<Setter Property="FontStretch" Value="{StaticResource WE.FontStretch}" />
+		<Setter Property="TextElement.FontSize" Value="{StaticResource WE.PrimaryFontSize}" />
+		<Setter Property="TextElement.FontFamily" Value="{StaticResource WE.FontFamily}" />
+		<Setter Property="TextElement.FontStyle" Value="{StaticResource WE.FontStyle}" />
+		<Setter Property="TextElement.FontWeight" Value="{StaticResource WE.FontWeight}" />
+		<Setter Property="TextElement.FontStretch" Value="{StaticResource WE.FontStretch}" />
+		<Setter Property="TextElement.Foreground" Value="{DynamicResource WE.PrimaryTextBrush}" />
+		<Setter Property="TextBlock.FontSize" Value="{StaticResource WE.PrimaryFontSize}" />
+		<Setter Property="TextBlock.FontFamily" Value="{StaticResource WE.FontFamily}" />
+		<Setter Property="TextBlock.FontStyle" Value="{StaticResource WE.FontStyle}" />
+		<Setter Property="TextBlock.FontWeight" Value="{StaticResource WE.FontWeight}" />
+		<Setter Property="TextBlock.FontStretch" Value="{StaticResource WE.FontStretch}" />
+		<Setter Property="TextBlock.Foreground" Value="{DynamicResource WE.PrimaryTextBrush}" />
+		<Setter Property="SnapsToDevicePixels" Value="True" />
+		<Setter Property="UseLayoutRounding" Value="True" />
+		<Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+		<Style.Triggers>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Opacity" Value="{StaticResource WE.EnabledOpacity}" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+	<DropShadowEffect x:Key="WE.PrimaryShadowDepth"
+	                  BlurRadius="5"
+	                  Direction="270"
+	                  Opacity=".42"
+	                  RenderingBias="Performance"
+	                  ShadowDepth="1"
+	                  Color="{StaticResource WE.ShadowDepthColor}" />
+	<DropShadowEffect x:Key="WE.PopupShadowDepth"
+	                  BlurRadius="12"
+	                  Opacity="0.1"
+	                  ShadowDepth="2"
+	                  Color="{StaticResource WE.BlackColor}" />
+	<BooleanToVisibilityConverter x:Key="WE.Bool2VisibilityConverter" />
+	<Thickness x:Key="WE.TabItemBorderThickness">0,0,0,2</Thickness>
+
+	<Style TargetType="ToolTip">
+		<Setter Property="Visibility" Value="Visible" />
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+				<Setter Property="Visibility" Value="Collapsed" />
+			</DataTrigger>
+			<DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="">
+				<Setter Property="Visibility" Value="Collapsed" />
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+
+</ResourceDictionary>

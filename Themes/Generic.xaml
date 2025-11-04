@@ -1,0 +1,26 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<ResourceDictionary.MergedDictionaries>
+
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Styles/Styles.Buttons.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Styles/Styles.RepeatButton.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Styles/Styles.ComboBox.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Styles/Styles.MessageBox.xaml" />
+
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Basic/Light.Color.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Basic/Font.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Basic/Colors.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Basic/Geometrys.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Basic/ControlBasic.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Basic/Animations.xaml" />
+
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Mask.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/PathIcon.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Message.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/NumericBox.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/WinApp.ExtControl;component/Themes/Pagination.xaml" />
+
+	</ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

@@ -1,0 +1,31 @@
+name: Publish Release Package
+on:
+  push:
+    tags:
+      - "v**"
+
+jobs:
+  Build-Release:
+    runs-on: windows
+    steps:
+      - name: Git
+        uses: http://gitea.local.yious.cn/actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Build Application
+        run: ./Setup/buildCloud.ps1 -Version ${{ github.ref_name }}
+              
+      - name: Generate Release Doc
+        run: |
+          . ./Setup/git-utils.ps1
+          Set-GitReleaseDoc -Path release.doc -Tag ${{ gitea.ref }}
+
+      - name: Release
+        uses: https://gitea.com/actions/gitea-release-action@v1
+        with:
+          name: Release ${{ github.ref_name }}
+          body_path: release.doc
+          prerelease: false
+          files: ./bin/*.exe

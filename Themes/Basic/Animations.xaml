@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!--  预定义、可重用、命名一致的动画缓动效果  -->
+
+	<CubicEase x:Key="WE.CubicEaseInOut" EasingMode="EaseInOut" />
+	<PowerEase x:Key="WE.PowerEaseInOut" EasingMode="EaseInOut" />
+	<ExponentialEase x:Key="WE.ExponentialEaseOut" EasingMode="EaseOut" />
+	<SineEase x:Key="WE.SineEaseOut" EasingMode="EaseOut" />
+	<SineEase x:Key="WE.SineEaseInOut" EasingMode="EaseInOut" />
+	<BackEase x:Key="WE.BackEaseEaseInOut" EasingMode="EaseInOut" />
+</ResourceDictionary>

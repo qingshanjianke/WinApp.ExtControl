@@ -1,0 +1,285 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:WinApp.ExtControl.Controls"
+                    xmlns:helpers="clr-namespace:WinApp.ExtControl.Helpers">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="PathIcon.xaml" />
+		<ResourceDictionary Source="../Styles/Styles.Buttons.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<Style x:Key="WE.PageListBoxStyleKey" BasedOn="{StaticResource WE.ControlBasicStyle}" TargetType="{x:Type ListBox}">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBox}">
+					<Border Background="{TemplateBinding Background}"
+					        BorderBrush="{TemplateBinding BorderBrush}"
+					        BorderThickness="{TemplateBinding BorderThickness}"
+					        SnapsToDevicePixels="True">
+						<ScrollViewer Padding="{TemplateBinding Padding}" Focusable="False">
+							<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+						</ScrollViewer>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsGrouping" Value="True">
+							<Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="WE.PageListBoxItemStyleKey" BasedOn="{StaticResource WE.ControlBasicStyle}" TargetType="{x:Type ListBoxItem}">
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="Padding" Value="5 0" />
+		<Setter Property="MinWidth" Value="32" />
+		<Setter Property="Margin" Value="3 0" />
+		<Setter Property="Background" Value="{DynamicResource WE.BackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource WE.BaseBrush}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBoxItem}">
+					<Border Padding="{TemplateBinding Padding}"
+					        Background="{TemplateBinding Background}"
+					        BorderBrush="{TemplateBinding BorderBrush}"
+					        BorderThickness="{TemplateBinding BorderThickness}"
+					        CornerRadius="{Binding Path=(helpers:ElementHelper.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+					        SnapsToDevicePixels="True">
+						<ContentPresenter x:Name="PART_ContentPresenter"
+						                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+						                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+						                  RecognizesAccessKey="True"
+						                  TextElement.Foreground="{TemplateBinding Foreground}" />
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding .}" Value="···">
+				<Setter Property="IsEnabled" Value="False" />
+				<Setter Property="FontWeight" Value="Bold" />
+			</DataTrigger>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="BorderBrush" Value="{DynamicResource WE.PrimaryBrush}" />
+				<Setter Property="Background" Value="{DynamicResource WE.PrimaryMouseOverBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource WE.PrimaryBrush}" />
+			</Trigger>
+			<Trigger Property="IsSelected" Value="True">
+				<Setter Property="Background" Value="{DynamicResource WE.PrimaryBrush}" />
+				<Setter Property="TextElement.Foreground" Value="{DynamicResource WE.WindowTextBrush}" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+	<!--  IsLite="True"  -->
+	<ControlTemplate x:Key="WE.LitePagerControlTemplate" TargetType="{x:Type controls:Pagination}">
+		<Border Padding="{TemplateBinding Padding}"
+		        Background="{TemplateBinding Background}"
+		        BorderBrush="{TemplateBinding BorderBrush}"
+		        BorderThickness="{TemplateBinding BorderThickness}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="10" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="10" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="5" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="5" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<WrapPanel VerticalAlignment="Center">
+					<TextBlock Text="共" />
+					<TextBlock Text="{Binding Count, StringFormat=' {0} ', RelativeSource={RelativeSource TemplatedParent}}" />
+					<TextBlock Text="条" />
+				</WrapPanel>
+				<ComboBox x:Name="PART_CountPerPageNumericBox"
+				          Grid.Column="2"
+				          Width="60"
+				          VerticalContentAlignment="Center"
+				          ItemsSource="{Binding CountPerPageSource, RelativeSource={RelativeSource TemplatedParent}}"
+				          SelectedItem="{Binding CountPerPage, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+				<!--<controls:NumericBox x:Name="PART_CountPerPageNumericBox"
+				                     Grid.Column="2"
+				                     Width="32"
+				                     VerticalContentAlignment="Center"
+				                     Maximum="100000"
+				                     Minimum="1"
+				                     TextAlignment="Center"
+				                     UpDownButtonsWidth="0" />-->
+				<WrapPanel Grid.Column="3" Margin="3 0 0 0" VerticalAlignment="Center">
+					<TextBlock Text="条" />
+					<TextBlock Text=" /  " />
+					<TextBlock Text="页" />
+				</WrapPanel>
+				<Button Grid.Column="5" Width="32" Command="{x:Static controls:Pagination.PrevCommand}">
+					<controls:PathIcon Kind="Previous" Style="{StaticResource WE.MiniPathIcon}" />
+				</Button>
+				<controls:NumericBox x:Name="PART_JumpPageNumericBox"
+				                     Grid.Column="7"
+				                     Width="32"
+				                     Padding="3 0"
+				                     FontSize="{TemplateBinding FontSize}"
+				                     Minimum="1"
+				                     TextAlignment="Center"
+				                     UpDownButtonsWidth="0">
+					<controls:NumericBox.ToolTip>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding StringFormat="{}{0}/{1}">
+									<Binding Path="Current" RelativeSource="{RelativeSource TemplatedParent}" />
+									<Binding Path="PageCount" RelativeSource="{RelativeSource TemplatedParent}" />
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</controls:NumericBox.ToolTip>
+				</controls:NumericBox>
+				<Button Grid.Column="9" Width="32" Command="{x:Static controls:Pagination.NextCommand}">
+					<controls:PathIcon Kind="Next" Style="{StaticResource WE.MiniPathIcon}" />
+				</Button>
+			</Grid>
+		</Border>
+	</ControlTemplate>
+
+	<!--  IsLite = "False"  -->
+	<Style x:Key="WE.Pagination" BasedOn="{StaticResource WE.ControlBasicStyle}" TargetType="{x:Type controls:Pagination}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type controls:Pagination}">
+					<Border Padding="{TemplateBinding Padding}"
+					        Background="{TemplateBinding Background}"
+					        BorderBrush="{TemplateBinding BorderBrush}"
+					        BorderThickness="{TemplateBinding BorderThickness}">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="*" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>
+							<WrapPanel Margin="0 0 15 0" VerticalAlignment="Center">
+								<TextBlock Text="共" />
+								<TextBlock Text="{Binding Count, StringFormat=' {0} ', RelativeSource={RelativeSource TemplatedParent}}" />
+								<TextBlock Text="条" />
+							</WrapPanel>
+							<StackPanel Grid.Column="1" Margin="0 0 15 0" Orientation="Horizontal">
+								<TextBlock Margin="0 0 3 0" VerticalAlignment="Center" Text="页" />
+								<ComboBox x:Name="PART_CountPerPageNumericBox"
+								          Grid.Column="2"
+								          Width="60"
+								          VerticalContentAlignment="Center"
+								          ItemsSource="{Binding CountPerPageSource, RelativeSource={RelativeSource TemplatedParent}}"
+								          SelectedItem="{Binding CountPerPage, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+								<!--<controls:NumericBox x:Name="PART_CountPerPageNumericBox"
+								                     Grid.Column="2"
+								                     Width="32"
+								                     VerticalContentAlignment="Center"
+								                     FontSize="{TemplateBinding FontSize}"
+								                     Minimum="1"
+								                     TextAlignment="Center"
+								                     UpDownButtonsWidth="0" />-->
+								<TextBlock Margin="3 0 0 0" VerticalAlignment="Center" Text="条" />
+							</StackPanel>
+							<Button Grid.Column="2" Width="32" Command="{x:Static controls:Pagination.PrevCommand}">
+								<controls:PathIcon Kind="Previous" Style="{StaticResource WE.MiniPathIcon}" />
+							</Button>
+							<ListBox x:Name="PART_ListBox"
+							         Grid.Column="3"
+							         Margin="5 0"
+							         ItemContainerStyle="{StaticResource WE.PageListBoxItemStyleKey}"
+							         ItemsSource="{TemplateBinding Pages}"
+							         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+							         ScrollViewer.VerticalScrollBarVisibility="Hidden"
+							         SelectedIndex="0"
+							         Style="{StaticResource WE.PageListBoxStyleKey}">
+								<ListBox.ItemsPanel>
+									<ItemsPanelTemplate>
+										<UniformGrid Rows="1" />
+									</ItemsPanelTemplate>
+								</ListBox.ItemsPanel>
+							</ListBox>
+							<Button Grid.Column="4" Width="32" Command="{x:Static controls:Pagination.NextCommand}">
+								<controls:PathIcon Kind="Next" Style="{StaticResource WE.MiniPathIcon}" />
+							</Button>
+							<StackPanel Grid.Column="5" Orientation="Horizontal">
+								<TextBlock Margin="3 0" VerticalAlignment="Center" Text="跳至" />
+								<controls:NumericBox x:Name="PART_JumpPageNumericBox"
+								                     Width="32"
+								                     VerticalContentAlignment="Center"
+								                     FontSize="{TemplateBinding FontSize}"
+								                     Minimum="1"
+								                     TextAlignment="Center"
+								                     UpDownButtonsWidth="0" />
+								<TextBlock Margin="3 0 0 0" VerticalAlignment="Center" Text="页" />
+							</StackPanel>
+						</Grid>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsLite" Value="True">
+				<Setter Property="Template" Value="{StaticResource WE.LitePagerControlTemplate}" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+	<Style BasedOn="{StaticResource WE.Pagination}" TargetType="{x:Type controls:Pagination}" />
+
+
+	<Style x:Key="WE.SimplePagination" BasedOn="{StaticResource WE.ControlBasicStyle}" TargetType="{x:Type controls:SimplePagination}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type controls:SimplePagination}">
+					<Border Padding="{TemplateBinding Padding}"
+					        Background="{TemplateBinding Background}"
+					        BorderBrush="{TemplateBinding BorderBrush}"
+					        BorderThickness="{TemplateBinding BorderThickness}">
+						<Grid>
+							<TextBlock VerticalAlignment="Center" FontSize="16" Foreground="{StaticResource Text3Brush}">
+								<Run Text="共" />
+								<Run Text="{Binding Count, RelativeSource={RelativeSource TemplatedParent}}" />
+								<Run Text="条" />
+							</TextBlock>
+
+							<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+								<Button Width="66"
+								        VerticalAlignment="Center"
+								        Style="{StaticResource WE.DefaultButton}"
+								        Command="{x:Static controls:SimplePagination.PrevCommand}"
+								        Content="上一页" />
+								<TextBlock Margin="8 0" VerticalAlignment="Center">
+									<TextBlock.Text>
+										<MultiBinding StringFormat="{}{0}/{1}">
+											<Binding Path="Current" RelativeSource="{RelativeSource TemplatedParent}" />
+											<Binding Path="PageCount" RelativeSource="{RelativeSource TemplatedParent}" />
+										</MultiBinding>
+									</TextBlock.Text>
+								</TextBlock>
+
+								<Button Width="66"
+								        VerticalAlignment="Center"
+								        Style="{StaticResource WE.DefaultButton}"
+								        Command="{x:Static controls:SimplePagination.NextCommand}"
+								        Content="下一页" />
+							</StackPanel>
+						</Grid>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style BasedOn="{StaticResource WE.SimplePagination}" TargetType="{x:Type controls:SimplePagination}" />
+
+</ResourceDictionary>

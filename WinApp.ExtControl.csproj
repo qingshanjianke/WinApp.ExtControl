@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Platforms>AnyCPU;x64;x86</Platforms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!--暂时不需要的转换器-->
+		<Compile Remove="Core\Converts\ColorConverter.cs" />
+		<Compile Remove="Core\Converts\CornerRadiusToSurroundConverter.cs" />
+		<Compile Remove="Core\Converts\IndexToColor.cs" />
+		<Compile Remove="Core\Converts\StepIndexConverter.cs" />
+	</ItemGroup>
+
+</Project>
