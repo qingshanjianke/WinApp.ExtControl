@@ -46,6 +46,8 @@ jobs:
 
     - name: 📦 打包 NuGet 包
       run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --output ./artifacts
+        echo "打包输出:"
+        dir artifacts
 
     # 🌟 新增：使用 OIDC 登录 NuGet.org 获取临时 API Key
     - name: 🔐 认证到 NuGet.org（Trusted Publishing）
