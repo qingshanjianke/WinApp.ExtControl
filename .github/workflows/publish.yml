@@ -1,129 +1,47 @@
-name: .NET Class Library CI/CD - Windows
+name: Publish NuGet Package (Trusted Publishing)
 
 on:
   push:
-    branches: [ "master", "develop" ]
-  pull_request:
-    branches: [ "master" ]
-  release:
-    types: [published]  # 仅在创建GitHub Release时触发发布
+    tags:
+      - 'v*' # 当推送以 v 开头的 tag 时触发，如 v1.0.0
 
-env:
-  DOTNET_VERSION: '8.0.x'
-  PROJECT_PATH: './WinApp.ExtControl.csproj'
-  CONFIGURATION: 'Release'
-  NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
+permissions:
+  id-token: write   # ✅ 必须: 允许 OIDC 登录 NuGet.org
+  contents: read
 
 jobs:
-  build-and-test:
-    runs-on: windows-latest  # 使用Windows运行器
+  publish:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: 🏗️ 设置 .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x  # 或 8.0.x，根据你的项目版本调整
 
-    - name: 🔍 显示环境信息
-      run: |
-        echo "运行器操作系统: Windows"
-        dotnet --info
-        dotnet --list-sdks
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: 🧩 还原依赖
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
 
-    - name: 🔨 编译项目
-      run: dotnet build ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-restore
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output ./artifacts
 
-    - name: 🧪 运行测试
-      run: dotnet test ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --logger "trx" --results-directory "TestResults"
+      # 🌟 新增：使用 OIDC 登录 NuGet.org 获取临时 API Key
+      - name: Authenticate to NuGet.org (Trusted Publishing)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          nuget-service: nuget.org
+          user: qingshanjianke
 
-    - name: 📊 上传测试结果
-      uses: actions/upload-artifact@v4
-      if: always()  # 即使测试失败也上传结果
-      with:
-        name: test-results-windows
-        path: TestResults/
-        retention-days: 7
-
-  pack:
-    runs-on: windows-latest
-    needs: build-and-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.event_name == 'release'
-
-    steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
-
-    - name: 🏗️ 设置 .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: 📦 打包 NuGet 包
-      run: |
-        dotnet pack ${{ env.PROJECT_PATH }} `
-          --configuration ${{ env.CONFIGURATION }} `
-          --output ./nupkg `
-          --include-symbols `
-          --include-source `
-          -p:SymbolPackageFormat=snupkg `
-          -p:VersionSuffix=${{ github.run_number }} `
-          -p:ContinuousIntegrationBuild=true
-
-    - name: 💾 保存 NuGet 包制品
-      uses: actions/upload-artifact@v4
-      with:
-        name: nuget-packages
-        path: nupkg/*.nupkg
-        retention-days: 10
-
-  trusted-publish:
-    runs-on: windows-latest
-    needs: pack
-    # 仅在创建Release时执行可信发布
-    if: github.event_name == 'release'
-    
-    steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
-
-    - name: 🏗️ 设置 .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: 📥 下载 NuGet 包制品
-      uses: actions/download-artifact@v4
-      with:
-        name: nuget-packages
-        path: nupkg/
-
-    - name: 🔐 NuGet 可信发布到官方源
-      run: |
-        # 验证包文件存在
-        Get-ChildItem nupkg/*.nupkg | ForEach-Object { 
-          Write-Host "准备发布包: $($_.Name)" 
-        }
-        
-        # 执行可信发布
-        dotnet nuget push nupkg/*.nupkg `
-          --api-key ${{ secrets.NUGET_API_KEY }} `
-          --source ${{ env.NUGET_SOURCE }} `
-          --skip-duplicate `
-          --timeout 600
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-
-    - name: 🏷️ 发布符号包
-      run: |
-        dotnet nuget push nupkg/*.snupkg `
-          --api-key ${{ secrets.NUGET_API_KEY }} `
-          --source ${{ env.NUGET_SOURCE }} `
-          --skip-duplicate `
-          --timeout 600
-      if: success()  # 只有主包发布成功后才发布符号包
+      # 🚀 发布 NuGet 包
+      - name: Publish package to NuGet.org
+        run: dotnet nuget push "artifacts/*.nupkg" \
+               --api-key ${{ steps.login.outputs.NUGET_API_KEY }} \
+               --source https://api.nuget.org/v3/index.json \
+               --skip-duplicate
