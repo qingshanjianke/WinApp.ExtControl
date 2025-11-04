@@ -51,10 +51,12 @@ jobs:
         Write-Host "打包版本: $VERSION"
         dotnet pack $env:PROJECT_PATH `
           -p:Version=$VERSION `
-          --configuration $env:CONFIGURATION `
-          --output ./artifacts `
+          -p:DebugType=portable `
+          -p:DebugSymbols=true `
+          -p:SymbolPackageFormat=snupkg `
           --include-symbols --include-source `
-          -p:SymbolPackageFormat=snupkg
+          --configuration $env:CONFIGURATION `
+          --output ./artifacts
 
     # 🌟 新增：使用 OIDC 登录 NuGet.org 获取临时 API Key
     - name: 🔐 认证到 NuGet.org（Trusted Publishing）

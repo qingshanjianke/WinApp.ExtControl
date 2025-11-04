@@ -7,11 +7,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Platforms>AnyCPU;x64;x86</Platforms>
 
-		<!-- 生成可移植的 PDB 文件，这是现代 .NET 的标准 -->
 		<DebugType>portable</DebugType>
-		<!-- 启用生成符号包 (.snupkg) -->
+		<DebugSymbols>true</DebugSymbols>
 		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSource>true</IncludeSource>
 	</PropertyGroup>
 
 	<ItemGroup>
